@@ -5,7 +5,7 @@ use diesel::{
 };
 
 use crate::constants::constants;
-use crate::models::Pool;
+use crate::database::models::Pool;
 
 pub fn database_connection_pool() -> (Pool, String) {
     let database_url = constants();
