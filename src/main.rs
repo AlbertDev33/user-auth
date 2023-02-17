@@ -3,14 +3,13 @@ extern crate diesel;
 
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpServer};
-use diesel::prelude::*;
-use std::env::set_var;
 use std::io::Result;
 use time;
 
 mod constants;
 mod database;
 mod utils;
+mod error_handling;
 
 use database::connection_pool::database_connection_pool;
 use utils::hash::SECRET_KEY;
