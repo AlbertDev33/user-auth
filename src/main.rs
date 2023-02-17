@@ -10,7 +10,6 @@ use time;
 
 mod constants;
 mod database;
-mod models;
 mod utils;
 
 use database::connection_pool::database_connection_pool;
