@@ -14,7 +14,35 @@ pub struct User {
 }
 
 impl User {
-    pub fn from_details<S: Into<String>, T: Into<String>>(email: S, pwd: T) {
+    pub fn from_details<S: Into<String>, T: Into<String>>(email: S, pwd: T) -> Self {
+        return User {
+            email: email.into(),
+            hash: pwd.into(),
+            created_at: chrono::Local::now().naive_local(),
+        };
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
+#[table_name = "invitations"]
+pub struct Invitation {
+    pub email: String,
+    pub expires_at: chrono::NaiveDateTime,
+}
+
+impl<T> From<T> for Invitation
+where
+    T: Into<String>,
+{
+    fn from(email: T) -> Self {
+        let time_now = chrono::Local::now().naive_local();
+        let duration = chrono::Duration::hours(24);
         
+        let expires_at = time_now + duration;
+
+        return Invitation {
+            email: email.into(),
+            expires_at,
+        };
     }
 }
