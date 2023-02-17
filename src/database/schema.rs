@@ -10,3 +10,11 @@ table! {
         deleted_at -> Timestamptz,
     }
 }
+
+table! {
+    invitations (id) {
+        id -> Uuid,
+        email -> VarChar,
+        expires_at -> Timestamptz,
+    }
+}
