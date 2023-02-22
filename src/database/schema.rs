@@ -1,13 +1,10 @@
 use diesel::table;
 
 table! {
-    users (id) {
-        id -> Uuid,
+    users (email) {
         email -> VarChar,
         hash -> VarChar,
-        created_at -> Timestamptz,
-        updated_at -> Timestamptz,
-        deleted_at -> Timestamptz,
+        created_at -> Timestamp,
     }
 }
 
@@ -18,3 +15,5 @@ table! {
         expires_at -> Timestamptz,
     }
 }
+
+allow_tables_to_appear_in_same_query!(invitations, users);

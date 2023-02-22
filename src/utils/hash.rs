@@ -1,13 +1,15 @@
 use argon2::{self, Config};
 use std::{env::var, fmt::Error};
 
+use crate::error_handling::errors::ServiceError;
+
 lazy_static::lazy_static! {
     pub static ref SECRET_KEY: String = var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
 }
 
 const SALT: &'static [u8] = b"supersecuresalt";
 
-pub fn hash_password(password: &str) -> Result<String, &str> {
+pub fn hash_password(password: &str) -> Result<String, ServiceError> {
     let config = Config {
         secret: SECRET_KEY.as_bytes(),
         ..Default::default()
