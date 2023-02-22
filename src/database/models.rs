@@ -26,6 +26,7 @@ impl User {
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "invitations"]
 pub struct Invitation {
+    pub id: uuid::Uuid,
     pub email: String,
     pub expires_at: chrono::NaiveDateTime,
 }
@@ -41,8 +42,21 @@ where
         let expires_at = time_now + duration;
 
         return Invitation {
+            id: uuid::Uuid::new_v4(),
             email: email.into(),
             expires_at,
         };
+    }
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SlimUser {
+    pub email: String,
+}
+
+impl From<User> for SlimUser {
+    fn from(user: User) -> Self {
+        return SlimUser { email: user.email };
     }
 }
