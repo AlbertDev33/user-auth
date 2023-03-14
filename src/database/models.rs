@@ -1,11 +1,15 @@
 use diesel::{r2d2::ConnectionManager, PgConnection};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
+
+use crate::error_handling::errors::ServiceError;
 
 use super::schema::*;
 // type alias to use in multiple places
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
+pub type CustomResult<T> = std::result::Result<T, ServiceError>;
 
-#[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "users"]
 pub struct User {
     pub email: String,
@@ -26,7 +30,7 @@ impl User {
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "invitations"]
 pub struct Invitation {
-    pub id: uuid::Uuid,
+    pub id: Uuid,
     pub email: String,
     pub expires_at: chrono::NaiveDateTime,
 }
@@ -42,7 +46,7 @@ where
         let expires_at = time_now + duration;
 
         return Invitation {
-            id: uuid::Uuid::new_v4(),
+            id: Uuid::new_v4(),
             email: email.into(),
             expires_at,
         };
