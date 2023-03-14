@@ -22,9 +22,9 @@ pub fn hash_password(password: &str) -> Result<String, ServiceError> {
     });
 }
 
-pub fn verify(hash: &str, password: &str) -> Result<bool, Error> {
+pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
     return argon2::verify_encoded_ext(hash, password.as_bytes(), SECRET_KEY.as_bytes(), &[]).map_err(|err| {
         dbg!(err);
-        return Err("Error").unwrap();
+        return ServiceError::Unauthorized;
     })
 }
