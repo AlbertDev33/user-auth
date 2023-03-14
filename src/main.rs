@@ -16,7 +16,11 @@ mod handlers;
 mod utils;
 
 use database::connection_pool::database_connection_pool;
-use handlers::{invitation_handler::post_invitation, register_handler::register_user};
+use handlers::{
+    invitation_handler::post_invitation,
+    login_handler::{auth_middleware, AuthMiddleware},
+    register_handler::register_user,
+};
 
 use utils::hash::SECRET_KEY;
 
@@ -42,6 +46,9 @@ async fn main() -> Result<()> {
                     .service(web::resource("/invitation").route(web::post().to(post_invitation)))
                     .service(
                         web::resource("/user/{invitation_id}").route(web::post().to(register_user)),
+                    )
+                    .service(
+                        web::resource("/login").wrap(AuthMiddleware).route(web::post().to(auth_middleware))
                     ),
             )
     })
