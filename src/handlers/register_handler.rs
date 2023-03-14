@@ -33,14 +33,13 @@ fn query(
     use crate::database::schema::users::dsl::users;
 
     let uuid_invitation_id = uuid::Uuid::parse_str(&invitation_id)?;
-
-    let db_connection = &pool.get()?;
+    let db_connection = &mut pool.get()?;
 
     let inserted_user = invitations
         .filter(id.eq(uuid_invitation_id))
         .filter(email.eq(&user_data.email))
         .load::<Invitation>(db_connection)
-        .map_err(|_db_error| ServiceError::BadRequest("Invalid Invitation".into()))
+        .map_err(|_db_error| ServiceError::BadRequest("Invalid Invitation or email".into()))
         .and_then(|mut result| {
             if let Some(invitation) = result.pop() {
                 if invitation.expires_at > chrono::Local::now().naive_local() {
